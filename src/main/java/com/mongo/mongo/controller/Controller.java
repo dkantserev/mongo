@@ -1,11 +1,13 @@
-package com.mongo.mongo;
+package com.mongo.mongo.controller;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.mongo.mongo.model.ModelPoi;
+import com.mongo.mongo.Dto.ModelPoiDto;
+import com.mongo.mongo.model.QueryParameterSet;
+import com.mongo.mongo.service.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -19,7 +21,7 @@ public class Controller {
 
 
     @PostMapping
-    public ModelPoi save(@RequestBody ModelPoiDao modelPoi) {//добавить новый элемент в базу
+    public ModelPoi save(@RequestBody ModelPoiDto modelPoi) {//добавить новый элемент в базу
         return service.save(modelPoi);
     }
 

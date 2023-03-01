@@ -1,4 +1,4 @@
-package com.mongo.mongo;
+package com.mongo.mongo.Dto;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 @Data
-public class ModelPoiDao {
+public class ModelPoiDto {
 
    private Map<String,String> keyValueMap;
 }

@@ -1,5 +1,6 @@
-package com.mongo.mongo;
+package com.mongo.mongo.repository;
 
+import com.mongo.mongo.model.ModelPoi;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

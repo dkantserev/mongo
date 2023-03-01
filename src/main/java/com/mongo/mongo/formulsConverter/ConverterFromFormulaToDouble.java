@@ -1,5 +1,7 @@
-package com.mongo.mongo;
+package com.mongo.mongo.formulsConverter;
 
+import com.mongo.mongo.lexem.Lexeme;
+import com.mongo.mongo.lexem.LexemeBuffer;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -7,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.mongo.mongo.LexemeBuffer.expr;
-import static com.mongo.mongo.LexemeBuffer.lexAnalyze;
+import static com.mongo.mongo.lexem.LexemeBuffer.expr;
+import static com.mongo.mongo.lexem.LexemeBuffer.lexAnalyze;
 
 @Service
 public class ConverterFromFormulaToDouble {

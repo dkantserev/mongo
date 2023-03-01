@@ -1,4 +1,6 @@
-package com.mongo.mongo;
+package com.mongo.mongo.lexem;
+
+
 
 
 public   class Lexeme {

@@ -1,4 +1,4 @@
-package com.mongo.mongo;
+package com.mongo.mongo.model;
 
 
 

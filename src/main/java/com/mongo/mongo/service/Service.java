@@ -1,13 +1,17 @@
-package com.mongo.mongo;
+package com.mongo.mongo.service;
 
 
 
+import com.mongo.mongo.Dto.ModelPoiDto;
+import com.mongo.mongo.repository.Storage;
+import com.mongo.mongo.formulsConverter.ConverterFromFormulaToDouble;
+import com.mongo.mongo.model.ModelPoi;
+import com.mongo.mongo.model.QueryParameterSet;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -26,7 +30,7 @@ public class Service {
         this.storage = storage;
     }
 
-    public ModelPoi save(ModelPoiDao modelPoi) {
+    public ModelPoi save(ModelPoiDto modelPoi) {
         ModelPoi m= new ModelPoi();
         int i = storage.findAll().size();
         m.setId(i+1);
