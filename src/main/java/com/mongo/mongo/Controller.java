@@ -1,9 +1,11 @@
 package com.mongo.mongo;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -37,7 +39,7 @@ public class Controller {
         service.uploadXlsx(file);
     }
 
-    @GetMapping("createBase/")//команда для создания базы из загруженного документа
+    @GetMapping("/createBase")//команда для создания базы из загруженного документа
     public String createBase() throws IOException {
         return service.createDb();
     }
@@ -50,6 +52,11 @@ public class Controller {
     @GetMapping("/getQuery")//получить список возможных параметров запроса
     public QueryParameterSet getQuery(){
       return   service.query();
+    }
+
+    @GetMapping("/home")
+    public String homePage() {
+        return "Home";
     }
 
 
