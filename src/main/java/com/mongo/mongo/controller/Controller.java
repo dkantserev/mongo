@@ -4,6 +4,8 @@ import com.mongo.mongo.model.ModelPoi;
 import com.mongo.mongo.Dto.ModelPoiDto;
 import com.mongo.mongo.model.QueryParameterSet;
 import com.mongo.mongo.service.Service;
+import jdk.jfr.ContentType;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +25,7 @@ public class Controller {
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ModelPoi save(@RequestBody Optional<ModelPoiDto> modelPoi) {//добавить новый элемент в базу
         return service.save(modelPoi);
     }
@@ -38,12 +41,13 @@ public class Controller {
         return service.search(findByKey, findByValue);
     }
 
-    @PostMapping("/upload")//загрузка файла xlsx
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")//загрузка файла xlsx
     public void p(@RequestPart MultipartFile file) throws IOException {
         service.uploadXlsx(file);
     }
 
-    @GetMapping("/createBase")//команда для создания базы из загруженного документа
+    @GetMapping("/createBase")
+    @ResponseStatus(HttpStatus.CREATED)//команда для создания базы из загруженного документа
     public String createBase() throws IOException {
         return service.createDb();
     }
