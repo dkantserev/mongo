@@ -1,8 +1,10 @@
 package com.mongo.mongo.service;
 
 
-
 import com.mongo.mongo.Dto.ModelPoiDto;
+import com.mongo.mongo.exception.BadQueryException;
+import com.mongo.mongo.exception.FileNotUploadedException;
+import com.mongo.mongo.exception.ObjectNotFoundException;
 import com.mongo.mongo.repository.Storage;
 import com.mongo.mongo.formulsConverter.ConverterFromFormulaToDouble;
 import com.mongo.mongo.model.ModelPoi;
@@ -30,11 +32,14 @@ public class Service {
         this.storage = storage;
     }
 
-    public ModelPoi save(ModelPoiDto modelPoi) {
-        ModelPoi m= new ModelPoi();
+    public ModelPoi save(Optional<ModelPoiDto> modelPoi) {
+        if(modelPoi.isEmpty()){
+            throw new BadQueryException("missing new element");
+        }
+        ModelPoi m = new ModelPoi();
         int i = storage.findAll().size();
-        m.setId(i+1);
-        m.setKeyValueMap(modelPoi.getKeyValueMap());
+        m.setId(i + 1);
+        m.setKeyValueMap(modelPoi.get().getKeyValueMap());
         return storage.save(m);
     }
 
@@ -43,12 +48,24 @@ public class Service {
     }
 
 
-    public ModelPoi findId(String s) {
-        return storage.findById(Integer.parseInt(s)).orElseThrow();
+    public ModelPoi findId(Optional<String> s) {
+        if(s.isEmpty()){
+            throw new BadQueryException("missing id");
+        }
+        if(s.get().isBlank()){
+            throw new BadQueryException("void id");
+        }
+        return storage.findById(Integer.parseInt(s.get()))
+                .orElseThrow(()->new ObjectNotFoundException("object " +
+                        s.get() + " not found"));
     }
 
     public String createDb() throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream("dataBase.xlsx"));
+        File file2 = new File("dataBase.xlsx");
+        if(!file2.isFile()){
+            throw new FileNotUploadedException("File dataBase.xlsx missing");
+        }
+        XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file2));
         int rowMax = workbook.getSheetAt(0).getLastRowNum();
         int trigger = 1;
         List<ModelPoi> list = new ArrayList<>();
@@ -119,8 +136,15 @@ public class Service {
     }
 
 
-    public List<ModelPoi> search(String p, String s) {
-        return storage.findBy(p, s);
+    public List<ModelPoi> search(Optional<String> p, Optional<String> s) {
+        if (p.isEmpty() || s.isEmpty()) {
+            throw new BadQueryException("missing query");
+        }
+        if (p.get().isBlank() || s.get().isBlank()) {
+            throw new BadQueryException("void query");
+        }
+
+        return storage.findBy(p.get(), s.get());
     }
 
     public QueryParameterSet query() {
@@ -134,9 +158,9 @@ public class Service {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        start=st.indexOf("[")+1;
-        end=st.indexOf("]");
-        String[]m=st.substring(start,end).split(",");
+        start = st.indexOf("[") + 1;
+        end = st.indexOf("]");
+        String[] m = st.substring(start, end).split(",");
         for (String s : m) {
             queryParameterSet.getQuery().add(s);
         }

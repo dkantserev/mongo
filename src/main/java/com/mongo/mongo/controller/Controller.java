@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class Controller {
@@ -21,22 +23,22 @@ public class Controller {
 
 
     @PostMapping
-    public ModelPoi save(@RequestBody ModelPoiDto modelPoi) {//добавить новый элемент в базу
+    public ModelPoi save(@RequestBody Optional<ModelPoiDto> modelPoi) {//добавить новый элемент в базу
         return service.save(modelPoi);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<ModelPoi> load() {//получить полный список элементов
         return service.load();
     }
 
-    @GetMapping("/")// поиск по параметрам ключ/значение
-    public List<ModelPoi> findToParam(@RequestParam String p,
-                                      @RequestParam String s) {
-        return service.search(p,s);
+    @GetMapping("/byQuery")// поиск по параметрам ключ/значение
+    public List<ModelPoi> findToParam(@RequestParam Optional<String> findByKey,
+                                      @RequestParam Optional<String> findByValue) {
+        return service.search(findByKey, findByValue);
     }
 
-    @PostMapping("/file")//загрузка файла xlsx
+    @PostMapping("/upload")//загрузка файла xlsx
     public void p(@RequestPart MultipartFile file) throws IOException {
         service.uploadXlsx(file);
     }
@@ -46,8 +48,8 @@ public class Controller {
         return service.createDb();
     }
 
-    @GetMapping("/{id}")//поиск по id
-    public ModelPoi findById(@PathVariable String id) {
+    @GetMapping("byId/{id}")//поиск по id
+    public ModelPoi findById(@PathVariable Optional<String> id) {
         return service.findId(id);
     }
 
