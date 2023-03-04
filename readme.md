@@ -1,12 +1,25 @@
-# XlsxToMongoDb
-## Приложение создаёт из xlsx базу данных MongoDb и предоставляет доступ через http и TelegrammBot.
-В файл private.propertes необходимо записать:
-[x] admin password  
-[x] user password
-[x] bot name
-[x] bot key (выдает fatherBot в телеграмм)
-Приложение использует https  и в директории приложения необходим сертификат p12.  (можно воспользоватсья командной для генерации 
-keytool -import -alias springboot -file myCertificate.crt -keystore springboot.p12 -storepass password).  
-Для создания базы необходимо отправить POST по адресу $//mongo/upload  с BasicAuth username amdmin password установленный в private.propertes.  
-Затем Post запрос по адресу $//mongo/createBase.  
-Информация  endpoint будет доступна по адрес $/mongo/swagger-ui/index.html  или [спецификация http](https://app.swaggerhub.com/apis/dkantserev/mongo/1.0.0) .
+# XlsxToMongoDb  
+## Приложение создаёт из xlsx базу данных MongoDb и предоставляет доступ через http и TelegrammBot.  
+В файл private.propertes необходимо записать:  
+[x] admin password    
+[x] user password  
+[x] bot name  
+[x] bot key (выдает fatherBot в телеграмм)  
+Приложение использует https  и в директории приложения необходим сертификат p12.  (можно воспользоваться командой для генерации   
+keytool -import -alias springboot -file myCertificate.crt -keystore springboot.p12 -storepass password).      
+Для создания базы необходимо отправить запрос  POST с вложенным файлом xsls (multipart/form-data)   по адресу $//mongo/upload  с BasicAuth username amdmin password установленный в private.propertes.    
+Затем Post запрос по адресу $//mongo/createBase.    
+Информация по endpoint будет доступна по адрес $/mongo/swagger-ui/index.html  или [спецификация http](https://app.swaggerhub.com/apis/dkantserev/mongo/1.0.0) .  
+TelegramBot осуществляет поиск по ключ:значение передаваемые через чат. Список ключей можно запросить у бота командой /query.    
+Реализованы следующие варианты поиска:   
+[x] !ключ:значение    -поиск по параметрам;  
+[x] !!ключ:значение    - уточнение предыдущего поиска по дополнителным параметрам;  
+[x] !ключ:значение#n    - поиск по параметрам выдать n элементов;  
+[x] !ключ:значение##n    - поиск по параметрам выдать следующие n элементов;  
+[x] $ключ&a#n    - выдать n элементов отсортированных по возрастанию ключа;  
+[x] $ключ&d#    - выдать n элементов отсортированных по убыванию ключа;  
+
+## Действуещее приложение  [HTTPS](https://195.133.146.2:8080/mongo/home) / [TelegramBot](t.me/xlsxToMongoDbBot)  
+В данный момент приложение умеет интерпретировать только формулы типа SUM, в будущем планируется расширить возможность обработки других формул.  
+Планируется сделать более гибкую систему запросов к боту и реализовать выдачу ответов не только текстом но и файлом для скачивания.  
+Ключи поиска берутся с первой строки таблицы, значения со следующих. Пустых строк быть не должно.
