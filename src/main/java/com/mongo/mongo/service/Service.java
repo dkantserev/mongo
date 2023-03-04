@@ -2,6 +2,7 @@ package com.mongo.mongo.service;
 
 
 import com.mongo.mongo.Dto.ModelPoiDto;
+
 import com.mongo.mongo.exception.BadQueryException;
 import com.mongo.mongo.exception.FileNotUploadedException;
 import com.mongo.mongo.exception.ObjectNotFoundException;
@@ -9,6 +10,7 @@ import com.mongo.mongo.repository.Storage;
 import com.mongo.mongo.formulsConverter.ConverterFromFormulaToDouble;
 import com.mongo.mongo.model.ModelPoi;
 import com.mongo.mongo.model.QueryParameterSet;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -21,19 +23,22 @@ import java.io.*;
 
 import java.util.*;
 
+@Slf4j
 @org.springframework.stereotype.Service
 public class Service {
 
     private final Storage storage;
 
+
     public Service(Storage storage) {
 
 
         this.storage = storage;
+
     }
 
     public ModelPoi save(Optional<ModelPoiDto> modelPoi) {
-        if(modelPoi.isEmpty()){
+        if (modelPoi.isEmpty()) {
             throw new BadQueryException("missing new element");
         }
         ModelPoi m = new ModelPoi();
@@ -49,20 +54,21 @@ public class Service {
 
 
     public ModelPoi findId(Optional<String> s) {
-        if(s.isEmpty()){
+        if (s.isEmpty()) {
             throw new BadQueryException("missing id");
         }
-        if(s.get().isBlank()){
+        if (s.get().isBlank()) {
             throw new BadQueryException("void id");
         }
         return storage.findById(Integer.parseInt(s.get()))
-                .orElseThrow(()->new ObjectNotFoundException("object " +
+                .orElseThrow(() -> new ObjectNotFoundException("object " +
                         s.get() + " not found"));
     }
 
     public String createDb() throws IOException {
+
         File file2 = new File("dataBase.xlsx");
-        if(!file2.isFile()){
+        if (!file2.isFile()) {
             throw new FileNotUploadedException("File dataBase.xlsx missing");
         }
         XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file2));
@@ -138,9 +144,11 @@ public class Service {
 
     public List<ModelPoi> search(Optional<String> p, Optional<String> s) {
         if (p.isEmpty() || s.isEmpty()) {
+
             throw new BadQueryException("missing query");
         }
         if (p.get().isBlank() || s.get().isBlank()) {
+
             throw new BadQueryException("void query");
         }
 

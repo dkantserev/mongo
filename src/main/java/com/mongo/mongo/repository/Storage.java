@@ -14,10 +14,5 @@ public interface Storage extends MongoRepository<ModelPoi, Integer> {
     @Query("{\"keyValueMap.?0\":\"?1\"}")
     List<ModelPoi> findBy(String p, String s);
 
-    @Query(
-            value = "{}",
-            sort = "{\"?0\": -1}"
-    )
-    List<ModelPoi> sortAndLimit1(String p);
 
 }
